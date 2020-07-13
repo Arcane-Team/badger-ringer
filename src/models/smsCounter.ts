@@ -8,7 +8,7 @@ class SMSCounter extends Model {
   public readonly updatedAt!: Date
 }
 
-function idempotentInitExchangeCost( sequelize: any ) {
+function idempotentInitSMSCounter( sequelize: any ) {
   const tableName = "smsCounter";
   if ( ! sequelize.isDefined( tableName ) ) {
     SMSCounter.init({
@@ -16,10 +16,10 @@ function idempotentInitExchangeCost( sequelize: any ) {
           type: DataTypes.INTEGER
         , allowNull: true
       }
-      , {
-        tableName
-        , sequelize
-      }
+    }
+    , {
+      tableName
+      , sequelize
     });
   }
 
@@ -27,5 +27,6 @@ function idempotentInitExchangeCost( sequelize: any ) {
 }
 
 export {
-  SMSCounter
+  SMSCounter,
+  idempotentInitSMSCounter
 };

@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== "test") {
 const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
 database.then(() => {
   // post init database code here
-  actionLog.info("Database is inited")
+  actionLog.info("Database is inited");
 
   console.log(sms.listSMS());
 });
