@@ -23,7 +23,10 @@ database.then(() => {
   // post init database code here
   actionLog.info("Database is inited");
 
-  console.log(sms.listSMS());
+  const smsList = sms.listSMS();
+    smsList.forEach((id: number) => {
+    console.log(sms.getSMS(id));
+  });
 });
 
 // Express configuration
