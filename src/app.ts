@@ -8,6 +8,7 @@ import { expressWinstonLogger, logger } from "./util/logger";
 import v1Route from "./routes/v1";
 import { createDatabase } from "./common/sequelizeDatabase";
 import { actionLog } from "./util/logger";
+import * as sms from "./services/sms";
 
 // Create Express server
 const app = express();
@@ -21,6 +22,8 @@ const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
 database.then(() => {
   // post init database code here
   actionLog.info("Database is inited")
+
+  console.log(sms.listSMS());
 });
 
 // Express configuration
