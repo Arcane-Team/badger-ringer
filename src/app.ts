@@ -6,6 +6,8 @@ import jwt from "express-jwt";
 import { notFoundResponse, unauthorizedResponse } from "./helpers/apiResponse";
 import { expressWinstonLogger, logger } from "./util/logger";
 import v1Route from "./routes/v1";
+import { createDatabase } from "./common/sequelizeDatabase";
+import { actionLog } from "./util/logger";
 
 // Create Express server
 const app = express();
@@ -14,6 +16,12 @@ const app = express();
 if (process.env.NODE_ENV !== "test") {
   app.use(expressWinstonLogger);
 }
+
+const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
+database.then(() => {
+  // post init database code here
+  actionLog.info("Database is inited")
+});
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);
