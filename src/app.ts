@@ -22,19 +22,6 @@ actionLog.info("Run new sms checker");
 
 sms.newSMSChecker();
 
-// const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
-// database.then(() => {
-//   // post init database code here
-//   actionLog.info("Database is inited");
-//
-//   console.log(sms.newSMSChecker());
-//
-//   // const smsList = sms.listSMS();
-//   //   smsList.forEach((id: number) => {
-//   //   console.log(sms.getSMS(id));
-//   // });
-// });
-
 // Express configuration
 app.set("port", process.env.PORT || 3000);
 app.use(express.json());

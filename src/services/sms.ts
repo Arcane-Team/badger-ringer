@@ -1,7 +1,8 @@
 import exec from "ssh-exec";
-import {actionLog, errorLog} from "../util/logger";
+import { actionLog, errorLog } from "../util/logger";
 import { promises as fs } from "fs";
 import path from "path";
+import BadgerServer from "../services/badgerServer";
 
 const baseCommand: string = "uqmi -d /dev/cdc-wdm0";
 const user: string = "root";
@@ -55,8 +56,13 @@ export async function newSMSChecker() {
 
       if (lastNewSMSId > startSMSId) {
         for(let i = startSMSId; i <= lastNewSMSId; i++) {
-          const newSMS = await getSMS(i);
-          console.log(newSMS);
+          const newSMS: { [key: string]: any } = await getSMS(i);
+          const badgerServer = new BadgerServer();
+          await badgerServer.sendSMS(
+            newSMS.sender,
+            newSMS.text,
+            newSMS.timestamp
+          );
         }
 
         await fs.writeFile(path.join(path.join(__dirname, "../../../smsCounter.txt")), lastNewSMSId);
@@ -67,4 +73,8 @@ export async function newSMSChecker() {
   } catch(e) {
     errorLog.error(e);
   }
+
+  // wait between run 10 seconds
+  await new Promise(resolve => setTimeout(resolve, 10000));
+  newSMSChecker();
 }
