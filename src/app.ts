@@ -6,7 +6,7 @@ import jwt from "express-jwt";
 import { notFoundResponse, unauthorizedResponse } from "./helpers/apiResponse";
 import { expressWinstonLogger, logger } from "./util/logger";
 import v1Route from "./routes/v1";
-import { createDatabase } from "./common/sequelizeDatabase";
+//import { createDatabase } from "./common/sequelizeDatabase";
 import { actionLog } from "./util/logger";
 import * as sms from "./services/sms";
 
@@ -18,16 +18,23 @@ if (process.env.NODE_ENV !== "test") {
   app.use(expressWinstonLogger);
 }
 
-const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
-database.then(() => {
-  // post init database code here
-  actionLog.info("Database is inited");
+(async () => {
+  console.log(await sms.newSMSChecker());
+})();
 
-  const smsList = sms.listSMS();
-    smsList.forEach((id: number) => {
-    console.log(sms.getSMS(id));
-  });
-});
+
+// const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
+// database.then(() => {
+//   // post init database code here
+//   actionLog.info("Database is inited");
+//
+//   console.log(sms.newSMSChecker());
+//
+//   // const smsList = sms.listSMS();
+//   //   smsList.forEach((id: number) => {
+//   //   console.log(sms.getSMS(id));
+//   // });
+// });
 
 // Express configuration
 app.set("port", process.env.PORT || 3000);
