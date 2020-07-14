@@ -18,10 +18,9 @@ if (process.env.NODE_ENV !== "test") {
   app.use(expressWinstonLogger);
 }
 
-(async () => {
-  console.log(await sms.newSMSChecker());
-})();
+actionLog.info("Run new sms checker");
 
+sms.newSMSChecker();
 
 // const database = createDatabase({ isTest: process.env.NODE_ENV === "test" });
 // database.then(() => {

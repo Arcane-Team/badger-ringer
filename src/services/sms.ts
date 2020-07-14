@@ -1,6 +1,7 @@
 import exec from "ssh-exec";
 import {actionLog, errorLog} from "../util/logger";
 import { promises as fs } from "fs";
+import path from "path";
 
 const baseCommand: string = "uqmi -d /dev/cdc-wdm0";
 const user: string = "root";
@@ -39,7 +40,7 @@ export async function getSMS(id: number) {
 
 export async function newSMSChecker() {
   try {
-    const data = await fs.readFile("/Users/oleg/www/badger-ringer/smsCounter.txt", "utf8");
+    const data = await fs.readFile(path.join("../../smsCounter.txt"), "utf8");
     const lastSMSId = parseInt(data);
     const smsMessages: any = await listSMS();
     const lastNewSMSId = smsMessages[smsMessages.length - 1];
@@ -51,18 +52,17 @@ export async function newSMSChecker() {
         startSMSId = lastSMSId + 1;
       }
 
-      if (lastNewSMSId > lastSMSId) {
+      if (lastNewSMSId > startSMSId) {
         for(let i = startSMSId; i <= lastNewSMSId; i++) {
           const newSMS = await getSMS(i);
           console.log(newSMS);
         }
-      } else if (lastNewSMSId === lastSMSId) {
+
+        await fs.writeFile(path.join("../../smsCounter.txt"), lastNewSMSId);
+      } else if (lastNewSMSId === startSMSId) {
         actionLog.info("No new sms messages");
       }
     }
-
-
-
   } catch(e) {
     errorLog.error(e);
   }
