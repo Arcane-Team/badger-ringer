@@ -40,7 +40,8 @@ export async function getSMS(id: number) {
 
 export async function newSMSChecker() {
   try {
-    const data = await fs.readFile(path.join("../../smsCounter.txt"), "utf8");
+    const data = await fs.readFile(path.join(__dirname, "../../../smsCounter.txt"), "utf8");
+    console.log(data);
     const lastSMSId = parseInt(data);
     const smsMessages: any = await listSMS();
     const lastNewSMSId = smsMessages[smsMessages.length - 1];
@@ -58,7 +59,7 @@ export async function newSMSChecker() {
           console.log(newSMS);
         }
 
-        await fs.writeFile(path.join("../../smsCounter.txt"), lastNewSMSId);
+        await fs.writeFile(path.join(path.join(__dirname, "../../../smsCounter.txt")), lastNewSMSId);
       } else if (lastNewSMSId === startSMSId) {
         actionLog.info("No new sms messages");
       }
